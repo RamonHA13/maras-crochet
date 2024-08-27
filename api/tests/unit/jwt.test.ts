@@ -4,7 +4,7 @@ import { signJWT, verifyJWT } from '../../src/lib/jwt'
 describe('JWT', () => {
   describe('signJWT', () => {
     test('Should return a string', () => {
-      const token = signJWT(crypto.randomUUID(), 'some@email', 'client')
+      const token = signJWT(crypto.randomUUID(), 'some@email', ['client'])
 
       expect(token).toBeDefined()
       expect(typeof token).toBe('string')
@@ -13,9 +13,9 @@ describe('JWT', () => {
 
   describe('verifyJWT', () => {
     test('Should return the decoded token', async () => {
-      const token = signJWT(crypto.randomUUID(), 'some@email', 'client')
+      const token = signJWT(crypto.randomUUID(), 'some@email', ['client'])
       const [error, decoded] = await verifyJWT(token)
-      console.log(decoded)
+
       expect(error).toBe(null)
       expect(decoded).toBeDefined()
       expect(decoded).toHaveProperty('sub')
@@ -34,7 +34,7 @@ describe('JWT', () => {
       const expiredToken = signJWT(
         crypto.randomUUID(),
         'some@email',
-        'client',
+        ['client'],
         '1ms'
       )
       await new Promise(resolve => setTimeout(resolve, 10)) // Waits to expire the token

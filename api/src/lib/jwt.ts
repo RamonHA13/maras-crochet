@@ -1,11 +1,11 @@
-import { Jwt, JwtPayload, sign, verify } from 'jsonwebtoken'
+import { JwtPayload, sign, verify } from 'jsonwebtoken'
 import { JWT_SECRET } from './config'
 import { ReturnTuple } from './types'
 
 export function signJWT(
   userId: string,
   userEmail: string,
-  role: string,
+  role: string[],
   expireTime: string | number = '1h'
 ): string {
   const payload = {
@@ -30,20 +30,18 @@ export function signJWT(
 
 export async function verifyJWT(
   token: string
-): Promise<ReturnTuple<Jwt | JwtPayload | string>> {
+): Promise<ReturnTuple<JwtPayload>> {
   try {
-    const decoded = await new Promise<Jwt | JwtPayload | string>(
-      (resolve, reject) => {
-        verify(token, JWT_SECRET!, (err, decoded) => {
-          if (err) {
-            return reject(err)
-          }
+    const decoded = await new Promise<JwtPayload>((resolve, reject) => {
+      verify(token, JWT_SECRET!, (err, decoded) => {
+        if (err) {
+          return reject(err)
+        }
 
-          resolve(decoded!)
-        })
-      }
-    )
-    return [null, decoded]
+        resolve(decoded as JwtPayload)
+      })
+    })
+    return [null, decoded as JwtPayload]
   } catch (error) {
     return [error, null]
   }
