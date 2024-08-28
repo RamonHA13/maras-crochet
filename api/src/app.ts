@@ -3,14 +3,18 @@ import { type Server } from 'node:http'
 import morgan from 'morgan'
 import cors from 'cors'
 import AuthController, { AuthRoute } from './modules/auth/controller'
+import UserController, { UserRoute } from './modules/users/controller'
+import auth from './middlewares/auth'
 
 export default class App {
   PORT: number
   expressApp: Express
   webOrigin: string
   version: number
-  authRoute: string
   env: string
+
+  authRoute: string
+  userRoute: string
 
   constructor(port: number, version: number, env: string, webOrigin: string) {
     this.expressApp = express()
@@ -19,6 +23,7 @@ export default class App {
     this.env = env
     this.webOrigin = webOrigin
     this.authRoute = `/api/v${this.version}${AuthRoute.PREFIX}`
+    this.userRoute = `/api/v${this.version}${UserRoute.PREFIX}`
   }
 
   #middlewares(): void {
@@ -46,6 +51,7 @@ export default class App {
     })
 
     this.expressApp.use(this.authRoute, AuthController)
+    this.expressApp.use(this.userRoute, auth, UserController)
   }
 
   start(): Server {
