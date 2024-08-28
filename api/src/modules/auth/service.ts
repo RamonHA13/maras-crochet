@@ -1,7 +1,7 @@
 import { comparePassword, hashPassword } from '../../lib/bcrypt'
 import { signJWT } from '../../lib/jwt'
 import { ReturnTuple } from '../../lib/types'
-import UserNotFoundError from './errors/UserNotFoundError'
+import UserNotFoundError from '../../lib/errors/UserNotFoundError'
 import WrongPasswordError from './errors/WrongPasswordError'
 import { AuthData, AuthResponseDto, LoginData } from './model'
 import AuthRepository from './repository/repository'

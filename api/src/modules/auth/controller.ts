@@ -5,7 +5,7 @@ import HttpStatus from '../../lib/http-status'
 import AuthService from './service'
 import AuthPrismaRepository from './repository/auth-prisma.repository'
 import WrongPasswordError from './errors/WrongPasswordError'
-import UserNotFoundError from './errors/UserNotFoundError'
+import UserNotFoundError from '../../lib/errors/UserNotFoundError'
 
 const router = Router()
 export enum AuthRoute {
