@@ -6,7 +6,7 @@ import HttpStatus from '../../src/lib/http-status'
 import prisma from '../../src/lib/prisma'
 
 describe('/auth', async () => {
-  const app = new App(3000, 1, 'test', '')
+  const app = new App(3001, 1, 'test', '')
   const server = app.start()
   const api = request(app.expressApp)
 
