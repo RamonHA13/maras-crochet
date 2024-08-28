@@ -31,6 +31,7 @@ model User {
   acceptTermsAndConditions Boolean @default(false) @map("accept_terms_and_conditions")
   cart Cart?
   mailingAddress MailingAddress[]
+  favoriteProducts UserFavoriteProducts[]
 }
 
 model Cart {
@@ -74,4 +75,16 @@ model Product {
   imgUrl String @map("img_url")
   inStock Boolean @default(true) @map("in_stock")
   carts CartProduct[]
+  favoriteByUsers UserFavoriteProducts[]
+}
+
+model UserFavoriteProducts {
+  id String @id @default(uuid())
+  productId String 
+  product Product @relation(fields: [productId], references: [id])
+  userId String 
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([productId, userId])
+  
 }
