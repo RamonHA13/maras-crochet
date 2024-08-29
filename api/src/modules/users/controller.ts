@@ -1,12 +1,12 @@
 import { Router } from 'express'
-import HttpStatus from '../../lib/http-status'
+import HttpStatus from '../../lib/enums/http-status'
 import UserPrismaRepository from './repository/user-prisma.repository'
 import UserService from './service'
 import { uuid } from '../../lib/types'
 import UserNotFoundError from '../../lib/errors/UserNotFoundError'
 import { createUserRequest } from './model'
-import { User } from '@prisma/client'
-import { z } from 'zod'
+import validateAdmin from '../../middlewares/validateAdmin'
+import { uuidValidator } from '../../lib/validators'
 
 const router = Router()
 export enum UserRoute {
@@ -17,17 +17,7 @@ export enum UserRoute {
 const repository = new UserPrismaRepository()
 const service = new UserService(repository)
 
-router.get('/', async (req, res) => {
-  const { user } = req.session
-
-  const hasPermission = user!.role.find(
-    x => x.toLocaleLowerCase() === 'sudo' || x.toLocaleLowerCase() === 'admin'
-  )
-  if (!hasPermission)
-    return res
-      .status(HttpStatus.FORBIDDEN)
-      .json({ message: "You don't have permission to access this resource." })
-
+router.get('/', validateAdmin, async (_, res) => {
   const [err, users] = await service.getAllUsers()
 
   if (err)
@@ -38,9 +28,8 @@ router.get('/', async (req, res) => {
 
 router.get(UserRoute.BY_ID, async (req, res) => {
   const { id } = req.params
-  const result = await z
-    .object({ id: z.string().uuid() })
-    .safeParseAsync({ id })
+
+  const result = await uuidValidator.safeParseAsync(id)
   if (!result.success)
     return res
       .status(HttpStatus.BAD_REQUEST)
@@ -55,18 +44,8 @@ router.get(UserRoute.BY_ID, async (req, res) => {
   return res.status(HttpStatus.OK).json(userData)
 })
 
-router.post('/', async (req, res) => {
-  const { user } = req.session
+router.post('/', validateAdmin, async (req, res) => {
   const { password, email, role } = req.body
-
-  const canCreate = user!.role.find(
-    x => x.toLocaleLowerCase() === 'admin' || x.toLocaleLowerCase() === 'sudo'
-  )
-
-  if (!canCreate)
-    return res
-      .status(HttpStatus.FORBIDDEN)
-      .json({ message: "You don't have permission to create a resource" })
 
   const result = await createUserRequest.safeParseAsync({
     password,
@@ -84,7 +63,7 @@ router.post('/', async (req, res) => {
     password: result.data.password,
     email: result.data.email,
     role: role || ['CLIENT']
-  } as User)
+  })
 
   if (err)
     return res.status(HttpStatus.SERVER_ERROR).json({ message: 'Server error' })

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { verifyJWT } from '../lib/jwt'
-import HttpStatus from '../lib/http-status'
+import HttpStatus from '../lib/enums/http-status'
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken'
 
 export default async function auth(
