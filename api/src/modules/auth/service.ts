@@ -5,6 +5,7 @@ import UserNotFoundError from '../../lib/errors/UserNotFoundError'
 import WrongPasswordError from './errors/WrongPasswordError'
 import { AuthData, AuthResponseDto, LoginData } from './model'
 import AuthRepository from './repository/repository'
+import Roles from '../../lib/enums/roles'
 
 export interface IAuthService {
   login: (
@@ -60,7 +61,7 @@ export default class AuthService implements IAuthService {
       const responseDto: AuthResponseDto = {
         id: user.id,
         email: user.email,
-        token: signJWT(user.id, user.email, ['CLIENT'])
+        token: signJWT(user.id, user.email, [Roles.CLIENT])
       }
       return [null, responseDto]
     } catch (error) {

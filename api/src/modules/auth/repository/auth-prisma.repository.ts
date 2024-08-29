@@ -22,8 +22,10 @@ export default class AuthPrismaRepository
         role: true
       }
     })
-    return user
+
+    return user as LoginData | null
   }
+
   async create(email: string, password: string): Promise<AuthData> {
     const user = await this.prisma.user.create({
       data: {

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { Role } from '@prisma/client'
+import Roles from '../../lib/enums/roles'
 
 export interface AuthData {
   email: string
@@ -8,7 +8,7 @@ export interface AuthData {
 
 export interface LoginData extends AuthData {
   password: string
-  role: Role[]
+  role: Roles[]
 }
 
 export interface AuthResponseDto extends AuthData {

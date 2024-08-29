@@ -2,8 +2,11 @@ import { PrismaClient, User } from '@prisma/client'
 import { uuid } from '../../../lib/types'
 import UserRepository from './repository'
 import prismaClient from '../../../lib/prisma'
+import { UserRequestDto } from '../model'
 
-export default class UserPrismaRepository implements UserRepository<User> {
+export default class UserPrismaRepository
+  implements UserRepository<User, UserRequestDto>
+{
   prisma: PrismaClient = prismaClient
 
   async get(id: uuid): Promise<User | null> {
@@ -21,10 +24,11 @@ export default class UserPrismaRepository implements UserRepository<User> {
     return users
   }
 
-  async create(data: User): Promise<User> {
+  async create(data: UserRequestDto): Promise<User> {
     const user = await this.prisma.user.create({
       data
     })
+
     return user
   }
 }

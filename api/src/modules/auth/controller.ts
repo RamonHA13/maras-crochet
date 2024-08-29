@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { authSignupRequest } from './model'
 
-import HttpStatus from '../../lib/http-status'
+import HttpStatus from '../../lib/enums/http-status'
 import AuthService from './service'
 import AuthPrismaRepository from './repository/auth-prisma.repository'
 import WrongPasswordError from './errors/WrongPasswordError'
