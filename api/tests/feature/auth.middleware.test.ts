@@ -2,7 +2,7 @@ import express from 'express'
 import request from 'supertest'
 import auth from './../../src/middlewares/auth'
 import { describe, test, expect, beforeAll, vi, afterAll } from 'vitest'
-import HttpStatus from '../../src/lib/http-status'
+import HttpStatus from '../../src/lib/enums/http-status'
 import * as jwt from './../../src/lib/jwt'
 
 describe('Auth middleware', () => {

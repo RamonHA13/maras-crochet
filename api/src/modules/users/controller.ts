@@ -10,7 +10,7 @@ import { uuidValidator } from '../../lib/validators'
 
 const router = Router()
 export enum UserRoute {
-  PREFIX = '/users',
+  PREFIX = '/user',
   BY_ID = '/:id'
 }
 
