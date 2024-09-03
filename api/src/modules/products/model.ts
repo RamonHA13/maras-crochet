@@ -6,7 +6,7 @@ export interface ProductResponseDto {
   name: string
   price: number
   description: string
-  imgUrl: string
+  imgUrls: string[]
   inStock: boolean
 }
 

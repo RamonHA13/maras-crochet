@@ -7,6 +7,7 @@ import validateAdmin from '../../middlewares/validateAdmin'
 import { uuidValidator } from '../../lib/validators'
 import { uuid } from '../../lib/types'
 import auth from '../../middlewares/auth'
+import media from '../../middlewares/media'
 
 const router = Router()
 
@@ -46,49 +47,65 @@ router.get(ProductsRoute.ID, async (req, res) => {
   return res.status(HttpStatus.OK).json(data)
 })
 
-router.post('/', auth, validateAdmin, async (req, res) => {
-  const product = req.body
+router.post(
+  '/',
+  auth,
+  validateAdmin,
+  media('image', 'product'),
+  async (req, res) => {
+    const product = req.body
 
-  const result = await createProductRequest.safeParseAsync(product)
+    const result = await createProductRequest.safeParseAsync(product)
 
-  if (!result.success)
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .json({ message: 'Bad request', error: result.error.errors })
+    if (!result.success)
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Bad request', error: result.error.errors })
 
-  const [error, data] = await service.createProduct(result.data)
-  if (error)
-    return res
-      .status(HttpStatus.SERVER_ERROR)
-      .json({ messge: 'Server error', error })
+    const [error, data] = await service.createProduct(result.data)
+    if (error)
+      return res
+        .status(HttpStatus.SERVER_ERROR)
+        .json({ messge: 'Server error', error })
 
-  return res.redirect(`${ProductsRoute.PREFIX}/${data!.id}`)
-})
+    return res.redirect(`${ProductsRoute.PREFIX}/${data!.id}`)
+  }
+)
 
-router.patch(ProductsRoute.ID, auth, validateAdmin, async (req, res) => {
-  const { id: productId } = req.params
-  const productToUpdate = req.body
-  const idResult = await uuidValidator.safeParseAsync(productId)
-  if (!idResult.success)
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .json({ message: 'The id must be an uuid', error: idResult.error.errors })
+router.patch(
+  ProductsRoute.ID,
+  auth,
+  validateAdmin,
+  media('image', 'product'),
+  async (req, res) => {
+    const { id: productId } = req.params
+    const productToUpdate = req.body
+    const idResult = await uuidValidator.safeParseAsync(productId)
+    if (!idResult.success)
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'The id must be an uuid',
+        error: idResult.error.errors
+      })
 
-  const result = await patchProductRequest.safeParseAsync(productToUpdate)
-  if (!result.success)
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .json({ message: 'Bad request', error: result.error.errors })
+    const result = await patchProductRequest.safeParseAsync(productToUpdate)
+    if (!result.success)
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Bad request', error: result.error.errors })
 
-  const [error, data] = await service.updateById(productId as uuid, result.data)
+    const [error, data] = await service.updateById(
+      productId as uuid,
+      result.data
+    )
 
-  if (error)
-    return res
-      .status(HttpStatus.SERVER_ERROR)
-      .json({ message: 'Server error', error })
+    if (error)
+      return res
+        .status(HttpStatus.SERVER_ERROR)
+        .json({ message: 'Server error', error })
 
-  return res.redirect(`${ProductsRoute.PREFIX}/${data!.id}`)
-})
+    return res.redirect(`${ProductsRoute.PREFIX}/${data!.id}`)
+  }
+)
 
 router.delete(ProductsRoute.ID, auth, validateAdmin, async (req, res) => {
   const { id: productId } = req.params

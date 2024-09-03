@@ -3,7 +3,7 @@ import { z } from 'zod'
 export interface CategoryResponseDto {
   id: number
   name: string
-  imgUrl: string
+  imgUrls: string[]
 }
 
 export type CategoryRequestDto = Omit<CategoryResponseDto, 'id'>

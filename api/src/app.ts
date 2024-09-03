@@ -1,5 +1,6 @@
-import express, { type Express } from 'express'
 import { type Server } from 'node:http'
+import path from 'node:path'
+import express, { type Express } from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 
@@ -59,6 +60,8 @@ export default class App {
         })
         .send()
     })
+
+    this.expressApp.use(express.static(path.join(__dirname, '..', '/public')))
 
     this.expressApp.use(this.authRoute, AuthController)
     this.expressApp.use(this.userRoute, auth, UserController)

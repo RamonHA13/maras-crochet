@@ -64,7 +64,7 @@ model MailingAddress {
 model Category {
   id Int @id @default(autoincrement())
   name String
-  imgUrl String @map("img_url")
+  imgUrls Json @map("img_url")
 }
 
 model Product {
@@ -72,7 +72,7 @@ model Product {
   name String
   price Float
   description String
-  imgUrl String @map("img_url")
+  imgUrls Json @map("img_url")
   inStock Boolean @default(true) @map("in_stock")
   carts CartProduct[]
   favoriteByUsers UserFavoriteProducts[]

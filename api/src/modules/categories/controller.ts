@@ -6,6 +6,7 @@ import CategoryService from './service'
 import auth from '../../middlewares/auth'
 import validateAdmin from '../../middlewares/validateAdmin'
 import { createCategoryRequest, patchCategoryRequest } from './model'
+import media from '../../middlewares/media'
 
 const router = Router()
 
@@ -44,52 +45,64 @@ router.get(CategoriesRoute.ID, async (req, res) => {
   return res.status(HttpStatus.OK).json(category)
 })
 
-router.post('/', auth, validateAdmin, async (req, res) => {
-  const data = req.body
-  const result = await createCategoryRequest.safeParseAsync(data)
-  if (!result.success)
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .json({ message: 'Bad request', error: result.error.errors })
+router.post(
+  '/',
+  auth,
+  validateAdmin,
+  media('image', 'category'),
+  async (req, res) => {
+    const data = req.body
+    const result = await createCategoryRequest.safeParseAsync(data)
+    if (!result.success)
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Bad request', error: result.error.errors })
 
-  const [error, productCreated] = await service.create(result.data)
-  if (error)
-    return res
-      .status(HttpStatus.SERVER_ERROR)
-      .json({ message: 'Server error', error })
+    const [error, productCreated] = await service.create(result.data)
+    if (error)
+      return res
+        .status(HttpStatus.SERVER_ERROR)
+        .json({ message: 'Server error', error })
 
-  return res.redirect(`${CategoriesRoute.PREFIX}/${productCreated!.id}`)
-})
+    return res.redirect(`${CategoriesRoute.PREFIX}/${productCreated!.id}`)
+  }
+)
 
-router.patch(CategoriesRoute.ID, auth, validateAdmin, async (req, res) => {
-  const { id: categoryId } = req.params
-  const data = req.body
+router.patch(
+  CategoriesRoute.ID,
+  auth,
+  validateAdmin,
+  media('image', 'category'),
+  async (req, res) => {
+    const { id: categoryId } = req.params
+    const data = req.body
 
-  const resultId = await numberIdValidator.safeParseAsync(categoryId)
-  if (!resultId.success)
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .json({ message: 'Bad request', error: resultId.error.errors })
+    const resultId = await numberIdValidator.safeParseAsync(categoryId)
+    if (!resultId.success)
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Bad request', error: resultId.error.errors })
 
-  const result = await patchCategoryRequest.safeParseAsync(data)
+    const result = await patchCategoryRequest.safeParseAsync(data)
 
-  if (!result.success)
-    return res
-      .status(HttpStatus.BAD_REQUEST)
-      .json({ message: 'Bad request', error: result.error.errors })
+    if (!result.success)
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Bad request', error: result.error.errors })
 
-  const [error, categoryUpdated] = await service.updateById(
-    resultId.data,
-    result.data
-  )
+    const [error, categoryUpdated] = await service.updateById(
+      resultId.data,
+      result.data
+    )
 
-  if (error)
-    return res
-      .status(HttpStatus.SERVER_ERROR)
-      .json({ message: 'Server error', error })
+    if (error)
+      return res
+        .status(HttpStatus.SERVER_ERROR)
+        .json({ message: 'Server error', error })
 
-  return res.redirect(`${CategoriesRoute.PREFIX}/${categoryUpdated?.id}`)
-})
+    return res.redirect(`${CategoriesRoute.PREFIX}/${categoryUpdated?.id}`)
+  }
+)
 
 router.delete(CategoriesRoute.ID, auth, validateAdmin, async (req, res) => {
   const { id: categoryId } = req.params
