@@ -10,7 +10,7 @@ export type CategoryRequestDto = Omit<CategoryResponseDto, 'id'>
 
 export const createCategoryRequest = z.object({
   name: z.string(),
-  imgUrl: z.string().url()
+  imgUrls: z.array(z.string().url())
 })
 
 export const patchCategoryRequest = createCategoryRequest.partial()

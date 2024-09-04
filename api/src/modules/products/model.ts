@@ -16,7 +16,7 @@ export const createProductRequest = z.object({
   name: z.string(),
   price: z.number(),
   description: z.string(),
-  imgUrl: z.string().url(),
+  imgUrls: z.array(z.string().url()),
   inStock: z.boolean()
 })
 

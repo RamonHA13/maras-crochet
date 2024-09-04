@@ -8,15 +8,17 @@ export default class CategoriesPrismaRepository
 {
   prisma: PrismaClient = prismaClient
   async get(id: number): Promise<CategoryResponseDto | null> {
-    const category = await this.prisma.category.findUnique({
+    const category = (await this.prisma.category.findUnique({
       where: { id }
-    })
+    })) as CategoryResponseDto | null
 
     return category
   }
 
   async getAll(): Promise<CategoryResponseDto[]> {
-    const categories = await this.prisma.category.findMany()
+    const categories =
+      (await this.prisma.category.findMany()) as CategoryResponseDto[]
+
     return categories
   }
 
@@ -24,21 +26,25 @@ export default class CategoriesPrismaRepository
     id: number,
     data: Partial<CategoryRequestDto>
   ): Promise<CategoryResponseDto> {
-    const productEdited = await this.prisma.category.update({
+    const productEdited = (await this.prisma.category.update({
       where: { id },
       data
-    })
+    })) as CategoryResponseDto
 
     return productEdited
   }
 
   async delete(id: number): Promise<CategoryResponseDto> {
-    const productDeleted = await this.prisma.category.delete({ where: { id } })
+    const productDeleted = (await this.prisma.category.delete({
+      where: { id }
+    })) as CategoryResponseDto
     return productDeleted
   }
 
   async create(data: CategoryRequestDto): Promise<CategoryResponseDto> {
-    const productCreated = await this.prisma.category.create({ data })
+    const productCreated = (await this.prisma.category.create({
+      data
+    })) as CategoryResponseDto
     return productCreated
   }
 }

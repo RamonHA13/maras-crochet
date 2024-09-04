@@ -10,8 +10,12 @@ import ProductController, { ProductsRoute } from './modules/products/controller'
 import CategoryController, {
   CategoriesRoute
 } from './modules/categories/controller'
+import UserFavoriteController, {
+  UserFavoriteRoute
+} from './modules/user-favorites/controller'
 
 import auth from './middlewares/auth'
+import getServerUrl from './lib/getServerUrl'
 
 export default class App {
   PORT: number
@@ -24,6 +28,7 @@ export default class App {
   userRoute: string
   productRoute: string
   categoryRoute: string
+  userFavoritesRoute: string
 
   constructor(port: number, version: number, env: string, webOrigin: string) {
     this.expressApp = express()
@@ -33,8 +38,9 @@ export default class App {
     this.webOrigin = webOrigin
     this.authRoute = `/api/v${this.version}${AuthRoute.PREFIX}`
     this.userRoute = `/api/v${this.version}${UserRoute.PREFIX}`
-    this.categoryRoute = `/api/v${this.version}${CategoriesRoute.PREFIX}`
     this.productRoute = `/api/v${this.version}${ProductsRoute.PREFIX}`
+    this.categoryRoute = `/api/v${this.version}${CategoriesRoute.PREFIX}`
+    this.userFavoritesRoute = `/api/v${this.version}${UserFavoriteRoute.PREFIX}`
   }
 
   #middlewares(): void {
@@ -53,7 +59,7 @@ export default class App {
     })
 
     this.expressApp.get(`/api/v${this.version}/`, (req, res) => {
-      const serverUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
+      const serverUrl = getServerUrl(req, true)
       return res
         .json({
           products: `${serverUrl}products`
@@ -67,6 +73,7 @@ export default class App {
     this.expressApp.use(this.userRoute, auth, UserController)
     this.expressApp.use(this.productRoute, ProductController)
     this.expressApp.use(this.categoryRoute, CategoryController)
+    this.expressApp.use(this.userFavoritesRoute, auth, UserFavoriteController)
   }
 
   start(): Server {
