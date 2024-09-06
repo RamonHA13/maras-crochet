@@ -1,0 +1,30 @@
+:root {
+  --main-color: #F8D4C5;
+}
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+
+}
+
+body {
+  background: #FCEEE8;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+li{
+  text-decoration: none;
+  list-style-type: none;
+}
