@@ -1,10 +1,9 @@
 import { ChangeEvent, FormEvent, useCallback, useState } from 'react'
 import LoginInput from './components/LoginInput'
-import './page.css'
 import { useLocation } from 'wouter'
 import LogoImg from '@renderer/common/components/LogoImg'
 
-export default function LoginPage() {
+export default function LoginView() {
   const [, redirect] = useLocation()
 
   const [data, setData] = useState({
@@ -30,14 +29,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div id="login">
-      <div className="login__logo">
+    <div id="login" className="flex items-center justify-evenly h-screen">
+      <div className="text-center">
         <LogoImg />
-        <h1>
+        <h1 className="text-4xl font-bold">
           Mara's Crochet <br /> Admin
         </h1>
       </div>
-      <form onSubmit={handleSubmit} className="login__form">
+      <form onSubmit={handleSubmit} className="login__form flex flex-col gap-3 h-[45%]">
         <LoginInput value={data.email} type="email" name="email" onChange={handleInputChange} />
         <LoginInput
           value={data.password}
@@ -46,8 +45,12 @@ export default function LoginPage() {
           onChange={handleInputChange}
         />
 
-        <button type="submit">Login</button>
-        <button type="button">Forgot password?</button>
+        <button type="submit" className="bg-[#F8D4C5] p-1 rounded-sm font-semibold">
+          Login
+        </button>
+        <button type="button" className="underline">
+          Forgot password?
+        </button>
       </form>
     </div>
   )

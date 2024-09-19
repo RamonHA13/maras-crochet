@@ -1,7 +1,10 @@
-export default {
-  products: '/products',
-  sells: '/sells',
-  employees: '/employees',
-  reports: '/reports',
-  '/': '/'
-} as const
+enum Routes {
+  Home = '/home',
+  Login = '/login',
+  Products = '/products',
+  Sells = '/sells',
+  Employees = '/employees',
+  Reports = '/reports'
+}
+
+export default Routes

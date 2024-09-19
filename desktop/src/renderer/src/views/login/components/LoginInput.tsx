@@ -1,5 +1,4 @@
 import Input from '@renderer/common/components/Input'
-import './login-input.css'
 import { ChangeEvent, memo, ReactNode, useCallback, useState } from 'react'
 
 interface Props {
@@ -11,15 +10,7 @@ interface Props {
 
 export default function LoginInput({ type = 'text', name, onChange, value }: Props) {
   const ComponentDict: Record<string, ReactNode> = {
-    password: (
-      <PasswordInput
-        id="login__input__input__password"
-        className="login__input__input"
-        value={value}
-        name={name}
-        onChange={onChange}
-      />
-    )
+    password: <PasswordInput className="p-1" value={value} name={name} onChange={onChange} />
   }
 
   const firstLetterToUpperCase = useCallback((name: string) => {
@@ -31,7 +22,7 @@ export default function LoginInput({ type = 'text', name, onChange, value }: Pro
       <label htmlFor={name}>{firstLetterToUpperCase(name)}</label>
       {ComponentDict[type] || (
         <Input
-          className="login__input__input"
+          className="flex flex-col"
           type={type}
           onChange={onChange}
           name={name}
@@ -42,25 +33,23 @@ export default function LoginInput({ type = 'text', name, onChange, value }: Pro
   )
 }
 
-const PasswordInput = memo(
-  ({ onChange, value, name, id }: Props & { className: string; id: string }) => {
-    const [view, setView] = useState(false)
-    const handleClickViewPassword = () => {
-      setView(!view)
-    }
-    return (
-      <div id={id}>
-        <Input
-          type={view ? 'text' : 'password'}
-          onChange={onChange}
-          name={name}
-          value={value}
-          style={{ padding: '1% 1% 1% 1%' }}
-        />
-        <button onClick={handleClickViewPassword} type="button">
-          {view ? 'Hide password' : 'See password'}
-        </button>
-      </div>
-    )
+const PasswordInput = memo(({ onChange, value, name }: Props & { className: string }) => {
+  const [view, setView] = useState(false)
+  const handleClickViewPassword = () => {
+    setView(!view)
   }
-)
+  return (
+    <div>
+      <Input
+        type={view ? 'text' : 'password'}
+        onChange={onChange}
+        name={name}
+        value={value}
+        style={{ padding: '1% 1% 1% 1%' }}
+      />
+      <button onClick={handleClickViewPassword} type="button" className="underline">
+        {view ? 'Hide password' : 'See password'}
+      </button>
+    </div>
+  )
+})
