@@ -15,13 +15,15 @@ export default function ViewLayout({ children, title }: Props) {
   return (
     <div className="flex justify-between h-screen">
       <SideBar location={location} />
-      <div className="h-full w-full flex flex-col relative">
+      <div className="h-full w-full flex flex-col relative bg-[#E8E8E8] rounded-s-3xl">
         <NetworkStatus />
-        <h2 className="text-3xl text-center font-bold uppercase my-14 relative">
+        <h2 className="text-3xl text-center font-bold uppercase mt-14 mb-5 relative">
           <BackButton />
           {title}
         </h2>
-        <div className="flex flex-col flex-grow justify-around items-center">{children}</div>
+        <div className="flex flex-col flex-grow justify-around items-center h-full">
+          <div className="h-full w-full">{children}</div>
+        </div>
         <footer className="pb-5">
           <Timer />
         </footer>

@@ -31,7 +31,16 @@ export default function SideBar({ location }: Props) {
     home: homeLogo
   }
 
-  const noShow = ['login']
+  const noShow = [
+    'login',
+    'productsdetails',
+    'productsedit',
+    'productscreate',
+    'employeesedit',
+    'employeescreate',
+    'employeesdetails'
+  ]
+
   return (
     <aside className="flex flex-col items-center justify-between h-screen left-0 top-0 bottom-0 px-5">
       <div className="flex flex-col items-center justify-center my-3">
