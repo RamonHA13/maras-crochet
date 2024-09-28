@@ -12,9 +12,10 @@ import SignOutButton from './SignOutButton'
 
 interface Props {
   location: string
+  userEmail: string
 }
 
-export default function SideBar({ location }: Props) {
+export default function SideBar({ location, userEmail }: Props) {
   const modulesDict = {
     products: 'Productos',
     sells: 'Ventas',
@@ -77,7 +78,7 @@ export default function SideBar({ location }: Props) {
       </div>
       <footer className="text-center pb-5">
         Administrador <br />
-        some@email.com
+        {userEmail}
       </footer>
     </aside>
   )

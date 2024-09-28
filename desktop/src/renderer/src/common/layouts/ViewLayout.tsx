@@ -4,6 +4,7 @@ import SideBar from '../components/SideBar'
 import useDate from '../hooks/useDate'
 import BackButton from '../components/BackButton'
 import NetworkStatus from '../components/NetworkStatus'
+import useAuthStore from '../stores/authStore'
 
 interface Props {
   children: ReactNode
@@ -12,9 +13,10 @@ interface Props {
 
 export default function ViewLayout({ children, title }: Props) {
   const [location] = useLocation()
+  const userEmail = useAuthStore((state) => state.email)
   return (
     <div className="flex justify-between h-screen">
-      <SideBar location={location} />
+      <SideBar location={location} userEmail={userEmail} />
       <div className="h-full w-full flex flex-col relative bg-[#E8E8E8] rounded-s-3xl">
         <NetworkStatus />
         <h2 className="text-3xl text-center font-bold uppercase mt-14 mb-5 relative">

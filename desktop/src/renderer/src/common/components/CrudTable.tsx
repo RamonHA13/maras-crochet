@@ -121,5 +121,3 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
     </footer>
   )
 }
-
-const Col = () => {}
