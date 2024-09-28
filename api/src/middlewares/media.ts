@@ -12,8 +12,7 @@ export default function media(
 
     return upload.array(mediaType)(req, res, err => {
       if (err) return next(err)
-
-      if (req.files) {
+      if (Array.isArray(req.files) && req.files.length > 0) {
         req.body.imgUrls = (req.files as Express.Multer.File[]).map(file => {
           return `${req.protocol}://${req.get('host')}/uploads/${imageType}/${file.filename}`
         })
@@ -21,7 +20,7 @@ export default function media(
         return next()
       }
 
-      return res.status(400).send()
+      return next()
     })
   }
 }

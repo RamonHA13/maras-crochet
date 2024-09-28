@@ -19,14 +19,11 @@ export default class MulterFile {
         }
       },
       filename: function (req, file, cb) {
-        /**
-         * TODO: Manejar caso de array
-         */
         const { name } = req.body
         const uniqueSuffix = Date.now()
 
         const fileType = file.originalname.split('.').slice(-1)
-        const imageName = `${name}-${uniqueSuffix}.${fileType}`
+        const imageName = `${name.replaceAll(' ', '-')}-${uniqueSuffix}.${fileType}`
         //req.file!.filename = imageName
         cb(null, imageName)
       }
