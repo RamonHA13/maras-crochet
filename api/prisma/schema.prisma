@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUDO
+  ADMIN
+  CLIENT
+}
+
+model User {
+  id String  @id @default(uuid())
+  name String? 
+  email String @unique
+  password String
+  contactNumber String? @map("contact_number")
+  role Role[] @default([CLIENT])
+  createdAt DateTime @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt DateTime @updatedAt @db.Timestamptz(6) @map("updated_at")
+  acceptTermsAndConditions Boolean @default(false) @map("accept_terms_and_conditions")
+  cart Cart?
+  mailingAddress MailingAddress[]
+  favoriteProducts UserFavoriteProducts[]
+}
+
+model Cart {
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+  products CartProduct[]
+}
+
+model CartProduct {
+  id String @id @default(uuid())
+  cart Cart @relation(fields: [cartId], references: [id])
+  cartId String
+  product Product @relation(fields: [productId], references: [id])
+  productId String
+
+  @@unique([cartId, productId])
+}
+
+model MailingAddress {
+  id Int @id @default(autoincrement())
+  state String
+  city String
+  zip_code String
+  user User @relation(fields: [user_id], references: [id])
+  user_id String @unique
+}
+
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String
+  imgUrls Json @map("img_url")
+}
+
+model Product {
+  id String @id @default(uuid())
+  name String
+  price Float
+  description String
+  imgUrls Json @map("img_url")
+  inStock Boolean @default(true) @map("in_stock")
+  carts CartProduct[]
+  favoriteByUsers UserFavoriteProducts[]
+}
+
+model UserFavoriteProducts {
+  id String @id @default(uuid())
+  productId String 
+  product Product @relation(fields: [productId], references: [id])
+  userId String 
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([productId, userId])
+  
+}
