@@ -54,9 +54,7 @@ router.post(
   media('image', 'product'),
   async (req, res) => {
     const product = req.body
-
     const result = await createProductRequest.safeParseAsync(product)
-
     if (!result.success)
       return res
         .status(HttpStatus.BAD_REQUEST)
@@ -68,7 +66,7 @@ router.post(
         .status(HttpStatus.SERVER_ERROR)
         .json({ messge: 'Server error', error })
 
-    return res.redirect(`${ProductsRoute.PREFIX}/${data!.id}`)
+    return res.redirect(`/api/v1${ProductsRoute.PREFIX}/${data!.id}`)
   }
 )
 
@@ -103,7 +101,7 @@ router.patch(
         .status(HttpStatus.SERVER_ERROR)
         .json({ message: 'Server error', error })
 
-    return res.redirect(`${ProductsRoute.PREFIX}/${data!.id}`)
+    return res.status(HttpStatus.OK).json(data)
   }
 )
 

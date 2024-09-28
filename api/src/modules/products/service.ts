@@ -1,3 +1,5 @@
+import path from 'node:path'
+import { deleteFile } from '../../lib/file'
 import { ReturnTuple, uuid } from '../../lib/types'
 import { ProductRequestDto, ProductResponseDto } from './model'
 import ProductRepository from './repository/repository'
@@ -53,6 +55,12 @@ export default class Productservice implements IProductService {
   async deleteById(id: uuid): Promise<ReturnTuple<ProductResponseDto>> {
     try {
       const productDeleted = await this.repository.delete(id)
+      const deleteImagePromises = productDeleted.imgUrls.map(x => {
+        const name = x.split('/').slice(-1)[0]
+        const pathName = path.join('public', 'uploads', 'product', name)
+        return deleteFile(pathName)
+      })
+      await Promise.allSettled(deleteImagePromises)
       return [null, productDeleted]
     } catch (error) {
       return [error, null]
@@ -63,8 +71,24 @@ export default class Productservice implements IProductService {
     id: uuid,
     data: Partial<ProductRequestDto>
   ): Promise<ReturnTuple<ProductResponseDto>> {
+    const { deletedImages = [], ...rest } = data
     try {
-      const productUpdated = await this.repository.edit(id, data)
+      const imagesUrls = (await this.repository.get(id))?.imgUrls
+      const newImages = imagesUrls
+        ? imagesUrls.filter(x => !deletedImages.includes(x))
+        : []
+      const productUpdated = await this.repository.edit(id, {
+        ...rest,
+        imgUrls: [...newImages, ...(rest.imgUrls || [])]
+      })
+      if (deletedImages.length > 0) {
+        const deleteImagePromises = deletedImages.map(x => {
+          const name = x.split('/').slice(-1)[0]
+          const pathName = path.join('public', 'uploads', 'product', name)
+          return deleteFile(pathName)
+        })
+        await Promise.allSettled(deleteImagePromises)
+      }
       return [null, productUpdated]
     } catch (error) {
       return [error, null]
