@@ -2,10 +2,14 @@ import { ChangeEvent, FormEvent, useCallback, useState } from 'react'
 import LoginInput from './components/LoginInput'
 import { useLocation } from 'wouter'
 import LogoImg from '@renderer/common/components/LogoImg'
+import API from '@renderer/common/utils/API'
+import { LoginResponseDto } from './model'
+import Routes from '@renderer/common/utils/routes'
+import useAuthStore from '@renderer/common/stores/authStore'
 
 export default function LoginView() {
   const [, redirect] = useLocation()
-
+  const setAuth = useAuthStore((state) => state.setAuth)
   const [data, setData] = useState({
     email: '',
     password: ''
@@ -18,14 +22,17 @@ export default function LoginView() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    API.post<LoginResponseDto>('/auth/login', data).then((tuple) => {
+      const [err, data] = tuple
+      console.log(data)
+      if (!err) {
+        setAuth(data.email, data.id, data.token)
+        redirect(Routes.Home)
+        return
+      }
 
-    /**
-     * TODO:
-     *  - Hacer el request al back
-     *  - Guardar el token en el localstorage
-     *  - Redirect a home
-     */
-    redirect('/')
+      console.error(err)
+    })
   }
 
   return (

@@ -1,14 +1,11 @@
 import { useLocation } from 'wouter'
+import useAuthStore from '../stores/authStore'
 
 export default function SignOutButton() {
   const [, redirect] = useLocation()
-
+  const signOut = useAuthStore((state) => state.signOut)
   const handleClick = (_e: React.MouseEvent<HTMLButtonElement>) => {
-    const token = window.localStorage.getItem('token')
-    if (token) {
-      window.localStorage.removeItem('token')
-    }
-
+    signOut()
     redirect('/login')
   }
 

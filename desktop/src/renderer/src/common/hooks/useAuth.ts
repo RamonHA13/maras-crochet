@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { useLocation } from 'wouter'
+import useAuthStore from '../stores/authStore'
 
 export default function useAuth(locationPath?: string) {
   const [, setLocation] = useLocation()
-
+  const token = useAuthStore((state) => state.token)
   useEffect(() => {
-    const token = window.localStorage.getItem('token')
     if (!token) {
       setLocation('/login')
       return
