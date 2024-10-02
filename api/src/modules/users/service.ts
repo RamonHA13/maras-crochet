@@ -4,10 +4,11 @@ import { ReturnTuple, uuid } from '../../lib/types'
 import UserNotFoundError from '../../lib/errors/UserNotFoundError'
 import CreatingUserError from './errors/CreatingUserError'
 import { User } from '@prisma/client'
+import Roles from '../../lib/enums/roles'
 
 export interface IUserService {
   repository: UserRepository<User, UserRequestDto>
-  getAllUsers: () => Promise<ReturnTuple<UserResponseDto[]>>
+  getAllUsers: (roles?: Roles[]) => Promise<ReturnTuple<UserResponseDto[]>>
   getUserById: (id: uuid) => Promise<ReturnTuple<UserResponseDto>>
   createUser: (data: UserRequestDto) => Promise<ReturnTuple<UserResponseDto>>
 }
@@ -19,9 +20,9 @@ export default class UserService implements IUserService {
     this.repository = repository
   }
 
-  async getAllUsers(): Promise<ReturnTuple<UserResponseDto[]>> {
+  async getAllUsers(roles?: Roles[]): Promise<ReturnTuple<UserResponseDto[]>> {
     try {
-      const users = await this.repository.getAll()
+      const users = await this.repository.getAll(roles)
 
       const usersParsed: UserResponseDto[] = users.map(x => {
         /* eslint-disable-next-line */

@@ -4,3 +4,5 @@
 - [ ] Add product and categories tests
 - [ ] Add user cart controller 
 - [ ] Add user favorite products controllers
+- [ ] Add category relation to products
+- [🕛] Add employees crud controllers

@@ -4,22 +4,26 @@ import ViewLayout from '@renderer/common/layouts/ViewLayout'
 import Routes from '@renderer/common/utils/routes'
 import { toast } from 'sonner'
 import { Employee } from './model'
+import useEmployeeStore from './store'
+import { useEffect } from 'react'
+import useAuthStore from '@renderer/common/stores/authStore'
 
 export default function EmployeesView() {
+  const token = useAuthStore((state) => state.token)
+  const employees = useEmployeeStore((state) => state.employees)
+  const fetchEmployees = useEmployeeStore((state) => state.fetchEmployees)
+
+  useEffect(() => {
+    fetchEmployees(token).catch((e) => console.error(e))
+  }, [])
   const handleDelete = (id: string) => {
     toast.success('Empleado eliminado correctamente' + id)
     // TODO: Hacer la request y manejar el estado global de los productos
   }
 
-  //TODO: Hacer el estado global de los empleados
-  const employees = [
-    { id: 1, name: 'John Doe', role: 'admin' },
-    { id: 2, name: 'Jane Smith', role: 'admin' },
-    { id: 3, name: 'Emily Johnson', role: 'admin' }
-  ]
   const cols: Cols<Employee>[] = [
-    { header: 'Nombre', accesor: (item) => item['name'] },
-    { header: 'Rol', accesor: (item) => item['role'] }
+    { header: 'Nombre', accesor: (item) => item['name'] || item['email'] },
+    { header: 'Rol', accesor: (item) => item['role'].join(' - ') }
   ]
 
   return (

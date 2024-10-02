@@ -40,7 +40,11 @@ export default function EditProductView() {
     const formData = new FormData()
     formData.append('name', data.name)
     Object.entries(data).forEach(([key, value]) => {
-      if (data[key] !== product[key] && !key.toLocaleLowerCase().includes('image')) {
+      if (
+        key !== 'name' &&
+        data[key] !== product[key] &&
+        !key.toLocaleLowerCase().includes('image')
+      ) {
         formData.append(key, typeof value !== 'string' ? String(value) : value)
       }
     })

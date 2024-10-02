@@ -7,6 +7,7 @@ import UserNotFoundError from '../../lib/errors/UserNotFoundError'
 import { createUserRequest } from './model'
 import validateAdmin from '../../middlewares/validateAdmin'
 import { uuidValidator } from '../../lib/validators'
+import Roles from '../../lib/enums/roles'
 
 const router = Router()
 export enum UserRoute {
@@ -17,11 +18,16 @@ export enum UserRoute {
 const repository = new UserPrismaRepository()
 const service = new UserService(repository)
 
-router.get('/', validateAdmin, async (_, res) => {
-  const [err, users] = await service.getAllUsers()
+router.get('/', validateAdmin, async (req, res) => {
+  const { role } = req.query
+  const roles = typeof role === 'string' ? role.split(',') : undefined
+
+  const [err, users] = await service.getAllUsers(roles as Roles[])
 
   if (err)
-    return res.status(HttpStatus.SERVER_ERROR).json({ messge: 'Server error' })
+    return res
+      .status(HttpStatus.SERVER_ERROR)
+      .json({ message: 'Server error', error: err })
 
   return res.status(HttpStatus.OK).json(users)
 })

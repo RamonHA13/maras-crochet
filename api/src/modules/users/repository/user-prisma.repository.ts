@@ -1,8 +1,9 @@
-import { PrismaClient, User } from '@prisma/client'
+import { PrismaClient, Role, User } from '@prisma/client'
 import { uuid } from '../../../lib/types'
 import UserRepository from './repository'
 import prismaClient from '../../../lib/prisma'
 import { UserRequestDto } from '../model'
+import Roles from '../../../lib/enums/roles'
 
 export default class UserPrismaRepository
   implements UserRepository<User, UserRequestDto>
@@ -18,8 +19,16 @@ export default class UserPrismaRepository
 
     return user
   }
-  async getAll(): Promise<User[]> {
-    const users = await this.prisma.user.findMany()
+  async getAll(roles?: Roles[]): Promise<User[]> {
+    const users = await this.prisma.user.findMany({
+      where: roles
+        ? {
+            role: {
+              hasSome: roles as Role[]
+            }
+          }
+        : {}
+    })
 
     return users
   }

@@ -3,15 +3,15 @@
 export interface EmployeeTable {
   id: string
   name: string
-  rol: string
+  rol: string[]
 }
 
 export interface Employee {
   id: string
-  name: string
-  contactNumber: number | string
+  name?: string
+  contactNumber?: number | string
   email: string
-  role: string //TODO Cambiar esto a un enum
+  role: string[] //TODO Cambiar esto a un enum
 }
 
 export interface EmployeeDetailsDto extends Employee {}
