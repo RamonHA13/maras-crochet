@@ -1,7 +1,7 @@
 import { TextInput } from 'react-native-paper'
 import { Text } from 'react-native'
-import AuthLayout from '../../components/auth/Layout'
 import { useState } from 'react'
+import AuthLayout from '../../components/auth/Layout'
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('')

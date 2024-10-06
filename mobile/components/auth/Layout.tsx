@@ -83,7 +83,7 @@ function LoginOptions() {
   return (
     <>
       <View className='flex flex-row items-center gap-1'>
-        <Link href='(auth)/register' className='underline'>
+        <Link href='/register' className='underline'>
           You don't have an account?
         </Link>
         <FontAwesome
@@ -94,7 +94,7 @@ function LoginOptions() {
         />
       </View>
       <View className='flex flex-row items-center gap-1'>
-        <Link href='(auth)/forgot-password' className='underline'>
+        <Link href='/forgot-password' className='underline'>
           Forgot your password?
         </Link>
         <FontAwesome
@@ -117,7 +117,7 @@ function SignUpOptions() {
         color='red'
         className='mr-6'
       />
-      <Link href='(auth)/' className='underline'>
+      <Link href='/login' className='underline'>
         Already have an account?
       </Link>
     </View>
