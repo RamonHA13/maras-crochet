@@ -14,7 +14,7 @@ export default function media(
       if (err) return next(err)
       if (Array.isArray(req.files) && req.files.length > 0) {
         req.body.imgUrls = (req.files as Express.Multer.File[]).map(file => {
-          return `${req.protocol}://${req.get('host')}/uploads/${imageType}/${file.filename}`
+          return `/uploads/${imageType}/${file.filename}`
         })
 
         return next()

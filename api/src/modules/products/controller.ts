@@ -2,12 +2,17 @@ import { Router } from 'express'
 import ProductPrismaRepository from './repository/products-prisma.repository'
 import Productservice from './service'
 import HttpStatus from '../../lib/enums/http-status'
-import { createProductRequest, patchProductRequest } from './model'
+import {
+  createProductRequest,
+  patchProductRequest,
+  ProductResponseDto
+} from './model'
 import validateAdmin from '../../middlewares/validateAdmin'
 import { uuidValidator } from '../../lib/validators'
 import { uuid } from '../../lib/types'
 import auth from '../../middlewares/auth'
 import media from '../../middlewares/media'
+import getServerUrl from '../../lib/getServerUrl'
 
 const router = Router()
 
@@ -19,13 +24,22 @@ export enum ProductsRoute {
 const repository = new ProductPrismaRepository()
 const service = new Productservice(repository)
 
-router.get('/', async (_req, res) => {
-  const [error, products] = await service.getAllProducts()
-
+router.get('/', async (req, res) => {
+  const [error, serviceProducts] = await service.getAllProducts()
   if (error)
     return res
       .status(HttpStatus.SERVER_ERROR)
       .json({ message: 'Server error', error })
+
+  const serverUrl = getServerUrl(req, false)
+  const products = serviceProducts!.map(x => ({
+    ...x,
+    category: {
+      ...x!.category,
+      imgUrls: (x!.category.imgUrls! as string[]).map(x => `${serverUrl}${x}`)
+    },
+    imgUrls: x.imgUrls.map(y => `${serverUrl}${y}`)
+  }))
 
   return res.status(HttpStatus.OK).json(products)
 })
@@ -39,12 +53,24 @@ router.get(ProductsRoute.ID, async (req, res) => {
       .json({ message: 'The id must be an uuid' })
 
   const [error, data] = await service.getById(productId as uuid)
+
+  const serverUrl = getServerUrl(req, false)
+  const product: ProductResponseDto = {
+    ...data!,
+    category: {
+      ...data!.category,
+      imgUrls: (data!.category.imgUrls! as string[]).map(
+        x => `${serverUrl}${x}`
+      )
+    },
+    imgUrls: data!.imgUrls.map(x => `${serverUrl}${x}`)
+  }
   if (error)
     return res
       .status(HttpStatus.SERVER_ERROR)
       .json({ message: 'Server error', error })
 
-  return res.status(HttpStatus.OK).json(data)
+  return res.status(HttpStatus.OK).json(product)
 })
 
 router.post(

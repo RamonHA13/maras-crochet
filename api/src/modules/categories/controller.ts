@@ -5,8 +5,13 @@ import CategoriesPrismaRepository from './repository/categories-prisma.repositor
 import CategoryService from './service'
 import auth from '../../middlewares/auth'
 import validateAdmin from '../../middlewares/validateAdmin'
-import { createCategoryRequest, patchCategoryRequest } from './model'
+import {
+  CategoryResponseDto,
+  createCategoryRequest,
+  patchCategoryRequest
+} from './model'
 import media from '../../middlewares/media'
+import getServerUrl from '../../lib/getServerUrl'
 
 const router = Router()
 
@@ -18,13 +23,18 @@ export enum CategoriesRoute {
 const repository = new CategoriesPrismaRepository()
 const service = new CategoryService(repository)
 
-router.get('/', async (_req, res) => {
-  const [error, categories] = await service.getAll()
+router.get('/', async (req, res) => {
+  const [error, serviceCategories] = await service.getAll()
   if (error)
     return res
       .status(HttpStatus.SERVER_ERROR)
       .json({ messge: 'Server error', error })
 
+  const serverUrl = getServerUrl(req, false)
+  const categories = serviceCategories!.map(x => ({
+    ...x,
+    imgUrls: x.imgUrls.map(y => `${serverUrl}${y}`)
+  }))
   return res.status(HttpStatus.OK).json(categories)
 })
 
@@ -36,7 +46,14 @@ router.get(CategoriesRoute.ID, async (req, res) => {
       .status(HttpStatus.BAD_REQUEST)
       .json({ message: 'Bad request', error: resultId.error.errors })
 
-  const [error, category] = await service.getById(resultId.data)
+  const [error, serviceCategory] = await service.getById(resultId.data)
+
+  const serverUrl = getServerUrl(req, false)
+  const category: CategoryResponseDto = {
+    ...serviceCategory!,
+    imgUrls: serviceCategory!.imgUrls.map(x => `${serverUrl}${x}`)
+  }
+
   if (error)
     return res
       .status(HttpStatus.SERVER_ERROR)

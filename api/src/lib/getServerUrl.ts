@@ -8,6 +8,6 @@ export default function getServerUrl(
   return url.format({
     protocol: req.protocol,
     host: req.get('host'),
-    pathname: showPathName ? req.originalUrl : '/'
+    pathname: showPathName ? req.originalUrl : ''
   })
 }
