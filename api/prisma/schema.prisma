@@ -65,6 +65,9 @@ model Category {
   id Int @id @default(autoincrement())
   name String
   imgUrls Json @map("img_url")
+  products Product[]
+  createdAt DateTime @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt DateTime @updatedAt @db.Timestamptz(6) @map("updated_at")
 }
 
 model Product {
@@ -76,6 +79,10 @@ model Product {
   inStock Boolean @default(true) @map("in_stock")
   carts CartProduct[]
   favoriteByUsers UserFavoriteProducts[]
+  category_id Int
+  category Category @relation(fields: [category_id], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz(6) @map("created_at")
+  updatedAt DateTime @updatedAt @db.Timestamptz(6) @map("updated_at")
 }
 
 model UserFavoriteProducts {

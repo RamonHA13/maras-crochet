@@ -4,24 +4,27 @@ import ProductRepository from './repository'
 import prismaClient from '../../../lib/prisma'
 
 export default class ProductPrismaRepository
-  implements ProductRepository<ProductResponseDto, ProductResponseDto>
+  implements ProductRepository<ProductResponseDto, ProductRequestDto>
 {
   prisma = prismaClient
   async getAll(): Promise<ProductResponseDto[]> {
-    const products =
-      (await this.prisma.product.findMany()) as ProductResponseDto[]
+    const products = (await this.prisma.product.findMany({
+      include: { category: true }
+    })) as ProductResponseDto[]
 
     return products
   }
   async get(id: uuid): Promise<ProductResponseDto> {
     const product = (await this.prisma.product.findUniqueOrThrow({
-      where: { id }
+      where: { id },
+      include: { category: true }
     })) as ProductResponseDto
     return product
   }
   async delete(id: uuid): Promise<ProductResponseDto> {
     const productDeleted = (await this.prisma.product.delete({
-      where: { id }
+      where: { id },
+      include: { category: true }
     })) as ProductResponseDto
 
     return productDeleted
@@ -33,16 +36,21 @@ export default class ProductPrismaRepository
   ): Promise<ProductResponseDto> {
     const productEdited = (await this.prisma.product.update({
       where: { id },
-      data
+      data,
+      include: { category: true }
     })) as ProductResponseDto
     return productEdited
   }
 
   async create(data: ProductRequestDto): Promise<ProductResponseDto> {
-    const productCreated = (await this.prisma.product.create({
-      data
-    })) as ProductResponseDto
+    /* eslint-disable-next-line */
+    const { deletedImages, ...rest } = data //TODO: Cambiar tipos para evitar esto
 
-    return productCreated
+    const productCreated = await this.prisma.product.create({
+      data: rest,
+      include: { category: true }
+    })
+
+    return productCreated as ProductResponseDto
   }
 }

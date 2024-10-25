@@ -40,7 +40,7 @@ router.get(CategoriesRoute.ID, async (req, res) => {
   if (error)
     return res
       .status(HttpStatus.SERVER_ERROR)
-      .json({ message: 'Server error', error })
+      .json({ message: 'Server error', error: (error as Error).message })
 
   return res.status(HttpStatus.OK).json(category)
 })
@@ -64,7 +64,9 @@ router.post(
         .status(HttpStatus.SERVER_ERROR)
         .json({ message: 'Server error', error })
 
-    return res.redirect(`${CategoriesRoute.PREFIX}/${productCreated!.id}`)
+    return res.redirect(
+      `/api/v1${CategoriesRoute.PREFIX}/${productCreated!.id}`
+    )
   }
 )
 
@@ -107,6 +109,7 @@ router.patch(
 router.delete(CategoriesRoute.ID, auth, validateAdmin, async (req, res) => {
   const { id: categoryId } = req.params
   const resultId = await numberIdValidator.safeParseAsync(categoryId)
+  console.log(resultId)
   if (!resultId.success)
     return res
       .status(HttpStatus.BAD_REQUEST)

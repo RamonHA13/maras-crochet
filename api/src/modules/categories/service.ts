@@ -42,7 +42,7 @@ export default class CategoryService implements ICategoryService {
   async getById(id: number): Promise<ReturnTuple<CategoryResponseDto>> {
     try {
       const category = await this.repository.get(id)
-      if (category) return [new Error('CategoryNotFound'), null]
+      if (!category) return [new Error('CategoryNotFound'), null]
 
       return [null, category]
     } catch (error) {
