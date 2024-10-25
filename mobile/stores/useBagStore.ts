@@ -1,11 +1,11 @@
 import { create } from 'zustand'
-import { BagProduct } from '../types/product'
+import { BagProduct, Product } from '../types/product'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface BagStore {
-  products: BagProduct[]
-  setBagProduct: (product: BagProduct) => void
+  products: Product[]
+  setBagProduct: (product: Product) => void
   removeBagProduct: (id: string) => void
 }
 
@@ -13,7 +13,7 @@ const useBagStore = create<BagStore>()(
   persist(
     set => ({
       products: [],
-      setBagProduct: (product: BagProduct) => {
+      setBagProduct: (product: Product) => {
         set(state => ({
           products: [...state.products, product]
         }))

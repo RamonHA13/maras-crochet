@@ -4,7 +4,6 @@ import HeaderNavigation from '../../../../components/orders/HeaderNavigation'
 
 export default function OrdersLayout() {
   const pathname = usePathname()
-  console.log(pathname)
   const routes = [
     {
       label: 'Delivered',

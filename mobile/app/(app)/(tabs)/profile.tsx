@@ -79,7 +79,7 @@ export default function ProfileScreen() {
             value={user.data?.acceptTermsAndConditions ?? false}
           />
         </View>
-        <View className='w-full flex items-center justify-center'>
+        <View className='w-full mb-2 flex items-center justify-center'>
           <Button
             className='w-3/4'
             mode='contained-tonal'

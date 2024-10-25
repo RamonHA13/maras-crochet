@@ -21,7 +21,7 @@ export default function FavoritesScreen() {
       <Text className='text-black text-3xl font-bold my-2'>My Favorites</Text>
       <FlatList
         data={products}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <FavoriteItem product={item} handleDelete={handleDelete(item.id)} />
         )}
@@ -51,7 +51,7 @@ const FavoriteItem = ({ handleDelete, product }: FavoriteItemProps) => {
         />
         <View className='w-[100px] h-[100px] mr-2'>
           <Image
-            source={{ uri: product.imgUrl[0] }}
+            source={{ uri: product.imgUrls[0] }}
             className='w-full h-full'
           />
         </View>

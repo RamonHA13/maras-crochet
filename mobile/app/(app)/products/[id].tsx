@@ -1,23 +1,29 @@
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { ScrollView, Text, View, Image } from 'react-native'
 import useProductsStore from '../../../stores/useProductsStore'
 import { Button, IconButton } from 'react-native-paper'
 import useFavoriteStore from '../../../stores/useFavoritesStore'
 import { BlurView } from 'expo-blur'
 import { StyleSheet } from 'react-native'
+import useBagStore from '../../../stores/useBagStore'
 
 export default function ProductByIdScreen() {
   const { id } = useLocalSearchParams<{ id: any }>()
+  const router = useRouter()
+
   const getProductById = useProductsStore(state => state.getProductById)
+
   const isFavoriteProduct = useFavoriteStore(state => state.isFavoriteProduct)
   const setFavorite = useFavoriteStore(state => state.setProduct)
   const removeProduct = useFavoriteStore(state => state.removeProduct)
 
+  const setBagProduct = useBagStore(state => state.setBagProduct)
   const product = getProductById(id)
   const isFavorite = isFavoriteProduct(id)
 
   const handlePress = () => {
-    console.log('Comprado: ' + id)
+    setBagProduct(product)
+    router.navigate('/(tabs)/bag')
   }
 
   const handleFavorite = () => {
@@ -28,14 +34,14 @@ export default function ProductByIdScreen() {
     }
   }
   return (
-    <View className='flex flex-col justify-between h-full'>
-      <View className='flex-row justify-between items-center mx-2'>
-        {/* <IconButton
+    <View className='flex flex-col justify-between h-full relative'>
+      <View className='flex-row justify-between items-center mx-2 absolute z-50 right-0'>
+        <IconButton
           iconColor='red'
           icon={isFavorite ? 'heart' : 'heart-outline'}
           size={35}
           onPress={handleFavorite}
-        /> */}
+        />
       </View>
       <View style={styles.container}>
         {/* Imagen de fondo con blur */}
@@ -48,7 +54,7 @@ export default function ProductByIdScreen() {
           />
         )}
 
-        <BlurView intensity={100} style={styles.blurContainer}>
+        <BlurView intensity={0} style={styles.blurContainer}>
           {/* ScrollView con imágenes originales */}
           <ScrollView
             horizontal
@@ -68,7 +74,9 @@ export default function ProductByIdScreen() {
       </View>
 
       <View className='mx-2'>
-        <Text className='text-2xl font-bold'>{product.name}</Text>
+        <Text className='text-2xl font-bold'>
+          {product.name.slice(0, 1).toLocaleUpperCase() + product.name.slice(1)}
+        </Text>
         <Text className='pb-1'>{product.description}</Text>
         {product.stars && <Text className='py-1'>Stars: {product.stars}</Text>}
         <Text>${product.price} MXN</Text>
@@ -87,7 +95,6 @@ const styles = StyleSheet.create({
   },
   blurContainer: {
     flexGrow: 1,
-    backgroundColor: 'rgba(0,0,0,.5)',
     alignItems: 'center',
     justifyContent: 'center'
   },

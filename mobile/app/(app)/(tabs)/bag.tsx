@@ -1,21 +1,23 @@
 import { View, Text, FlatList, Image } from 'react-native'
-import { BagProduct } from '../../../types/product'
+import { Product } from '../../../types/product'
 import { Button, IconButton } from 'react-native-paper'
 import { useMemo } from 'react'
 import useBagStore from '../../../stores/useBagStore'
+import useUserStore from '../../../stores/useUserStore'
 
 export default function BagScreen() {
   const bagProducts = useBagStore(state => state.products)
   const removeProduct = useBagStore(state => state.removeBagProduct)
+  const userToken = useUserStore(state => state.user.auth?.token)
 
   const total = useMemo(
-    () =>
-      bagProducts.reduce((prev, curr) => (prev += curr.amount * curr.price), 0),
+    () => bagProducts.reduce((prev, curr) => (prev += curr.price), 0),
     [bagProducts]
   )
 
   const handlePress = () => {
-    console.log('Comprado vieja: ' + total)
+    console.log('Comprado vieja: ' + total, userToken)
+    console.log(bagProducts)
     //TODO: Regidirigir a payment screen
   }
 
@@ -49,7 +51,7 @@ export default function BagScreen() {
 }
 
 interface BagItemProps {
-  product: BagProduct
+  product: Product
   handleDelete: () => void
 }
 
@@ -64,7 +66,7 @@ const BagItem = ({ product, handleDelete }: BagItemProps) => {
       />
       {/* Imagen del producto */}
       <View className='w-[100px] h-[100px] mr-2'>
-        <Image source={{ uri: product.imgUrl }} className='w-full h-full' />
+        <Image source={{ uri: product.imgUrls[0] }} className='w-full h-full' />
       </View>
 
       {/* Información del producto */}
@@ -74,30 +76,29 @@ const BagItem = ({ product, handleDelete }: BagItemProps) => {
           <Text className='font-bold'>{product.name}</Text>
 
           <View className='flex-row gap-2'>
-            <Text className='text-gray-400'>
+            <Text className='text-gray-400'>{product.description}</Text>
+            {/* <Text className='text-gray-400'>
               Color:{' '}
               <Text className='text-black font-semibold'>{product.color}</Text>
             </Text>
             <Text className='text-gray-400'>
               Size:{' '}
               <Text className='text-black font-semibold'>{product.size}</Text>
-            </Text>
+            </Text> */}
           </View>
         </View>
 
         {/* Controles de cantidad y precio */}
-        <View className='flex-row items-center justify-between'>
+        <View className='flex-row items-center justify-end'>
           {/* Botones de cantidad */}
-          <View className='flex-row items-center'>
+          {/* <View className='flex-row items-center'>
             <IconButton icon={'minus'} size={10} />
-            <Text>{product.amount}</Text>
+            <Text>{product.amount ?? 1}</Text>
             <IconButton icon={'plus'} size={10} />
-          </View>
+          </View> */}
 
           {/* Precio del producto */}
-          <Text className='font-bold'>
-            ${(product.price * product.amount).toFixed(2)}
-          </Text>
+          <Text className='font-bold'>${product.price.toFixed(2)}</Text>
         </View>
       </View>
     </View>
