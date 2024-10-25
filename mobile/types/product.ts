@@ -1,16 +1,19 @@
 export interface Category {
   id: any
   name: string
-  imgUrl: string
+  imgUrls: string[]
 }
 
 export interface Product {
-  id: any
+  id: string
   name: string
-  imgUrl: string
+  imgUrls: string[]
   description: string
   stars: number
   price: number
+  createdAt: string
+  inStock: boolean
+  category_id: number
 }
 
 export interface BagProduct extends Product {

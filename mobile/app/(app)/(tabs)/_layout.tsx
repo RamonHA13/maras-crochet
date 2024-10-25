@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router'
 
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import Feather from '@expo/vector-icons/Feather'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 
 import { HeaderImage, HeaderSearch } from '../../../components/StackHeader'
 
@@ -27,6 +28,19 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: () => <Feather name='home' size={20} color='black' />
+        }}
+      />
+      <Tabs.Screen
+        name='orders'
+        options={{
+          title: 'Orders',
+          tabBarIcon: () => (
+            <MaterialCommunityIcons
+              name='shopping-outline'
+              size={20}
+              color='black'
+            />
+          )
         }}
       />
       <Tabs.Screen

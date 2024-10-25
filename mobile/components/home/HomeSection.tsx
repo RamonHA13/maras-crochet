@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from 'react-native'
-import { Product } from '../../lib/types'
+import { Product } from './../../types/product'
 import ProductCard from '../ProductCard'
 
 interface Props {

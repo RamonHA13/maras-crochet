@@ -1,58 +1,12 @@
 import { View, Text, FlatList, Image } from 'react-native'
-import { BagProduct } from '../../../lib/types'
+import { BagProduct } from '../../../types/product'
 import { Button, IconButton } from 'react-native-paper'
 import { useMemo } from 'react'
+import useBagStore from '../../../stores/useBagStore'
 
 export default function BagScreen() {
-  const bagProducts: BagProduct[] = useMemo(
-    () => [
-      {
-        id: 1,
-        name: 'Producto de Ejemplo 1',
-        imgUrl: 'https://via.placeholder.com/150',
-        description: 'Descripción del producto de ejemplo 1',
-        stars: 4.5,
-        price: 29.99,
-        amount: 2, // Cantidad del producto en la bolsa
-        size: 'M', // Tamaño del producto
-        color: 'Rojo' // Color del producto
-      },
-      {
-        id: 2,
-        name: 'Producto de Ejemplo 2',
-        imgUrl: 'https://via.placeholder.com/150',
-        description: 'Descripción del producto de ejemplo 2',
-        stars: 4.0,
-        price: 19.99,
-        amount: 1,
-        size: 'L',
-        color: 'Azul'
-      },
-      {
-        id: 3,
-        name: 'Producto de Ejemplo 3',
-        imgUrl: 'https://via.placeholder.com/150',
-        description: 'Descripción del producto de ejemplo 3',
-        stars: 5.0,
-        price: 39.99,
-        amount: 3,
-        size: 'S',
-        color: 'Verde'
-      },
-      {
-        id: 4,
-        name: 'Producto de Ejemplo 4',
-        imgUrl: 'https://via.placeholder.com/150',
-        description: 'Descripción del producto de ejemplo 4',
-        stars: 3.5,
-        price: 24.99,
-        amount: 1,
-        size: 'M',
-        color: 'Negro'
-      }
-    ],
-    []
-  )
+  const bagProducts = useBagStore(state => state.products)
+  const removeProduct = useBagStore(state => state.removeBagProduct)
 
   const total = useMemo(
     () =>
@@ -62,12 +16,16 @@ export default function BagScreen() {
 
   const handlePress = () => {
     console.log('Comprado vieja: ' + total)
+    //TODO: Regidirigir a payment screen
   }
 
-  const handleDeleteItem = (id: any) => () => {
-    console.log('Eliminado: ' + id)
+  const handleDeleteItem = (id: string) => () => {
+    removeProduct(id)
+    //TODO: Hacer peticion
+    //TODO: HAcer esto optimista
   }
 
+  //TODO: Agregar imagen en caso de que no haya productos
   return (
     <View className='flex-1 mx-2'>
       <Text className='text-black text-3xl font-bold my-2'>My Bag</Text>

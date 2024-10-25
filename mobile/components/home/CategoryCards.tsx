@@ -1,6 +1,7 @@
 import { Link } from 'expo-router'
 import { Image, Pressable, ScrollView, Text } from 'react-native'
-import { Category } from '../../lib/types'
+import { Category } from '../../types/product'
+import { useCallback } from 'react'
 
 interface Props {
   categories: Category[]
@@ -25,6 +26,11 @@ interface CardProps {
   category: Category
 }
 export function Card({ category }: CardProps) {
+  const parseName = useCallback(() => {
+    const firstLetter = category.name.slice(0, 1).toLocaleUpperCase()
+    const restOfTheNAme = category.name.slice(1)
+    return firstLetter + restOfTheNAme
+  }, [category])
   return (
     <Link
       asChild
@@ -33,12 +39,15 @@ export function Card({ category }: CardProps) {
     >
       <Pressable>
         <Image
-          source={{ uri: category.imgUrl }}
+          className='rounded-md'
+          source={{
+            uri: category.imgUrls[0] ?? 'https://placehold.co/70x70',
+            height: 70,
+            width: 70
+          }}
           resizeMode='cover'
-          height={70}
-          width={70}
         />
-        <Text className='text-center'>{category.name}</Text>
+        <Text className='text-center'>{parseName()}</Text>
       </Pressable>
     </Link>
   )

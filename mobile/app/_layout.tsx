@@ -1,10 +1,13 @@
 import { Stack } from 'expo-router'
+import { PaperProvider } from 'react-native-paper'
 
 export default function RootLayout() {
   return (
-    <Stack>
-      <Stack.Screen name='(app)' options={{ headerShown: false }} />
-      <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-    </Stack>
+    <PaperProvider>
+      <Stack>
+        <Stack.Screen name='(app)' options={{ headerShown: false }} />
+        <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+      </Stack>
+    </PaperProvider>
   )
 }

@@ -1,47 +1,21 @@
 import { View, Text, FlatList, Image, Pressable } from 'react-native'
-import { Product } from '../../../lib/types'
+import { Product } from '../../../types/product'
 import { IconButton } from 'react-native-paper'
 import { Link } from 'expo-router'
+import useFavoriteStore from '../../../stores/useFavoritesStore'
 
 export default function FavoritesScreen() {
-  const products = [
-    {
-      id: 1,
-      name: 'Producto 1',
-      imgUrl: 'https://via.placeholder.com/150', // URL de imagen de ejemplo
-      description: 'Descripción del producto 1',
-      stars: 4.5,
-      price: 19.99
-    },
-    {
-      id: 2,
-      name: 'Producto 2',
-      imgUrl: 'https://via.placeholder.com/150',
-      description: 'Descripción del producto 2',
-      stars: 3.8,
-      price: 29.99
-    },
-    {
-      id: 3,
-      name: 'Producto 3',
-      imgUrl: 'https://via.placeholder.com/150',
-      description: 'Descripción del producto 3',
-      stars: 4.0,
-      price: 24.99
-    },
-    {
-      id: 4,
-      name: 'Producto 4',
-      imgUrl: 'https://via.placeholder.com/150',
-      description: 'Descripción del producto 4',
-      stars: 5.0,
-      price: 39.99
-    }
-  ]
+  const products = useFavoriteStore(state => state.products)
+  const removeProduct = useFavoriteStore(state => state.removeProduct)
 
+  console.log(products)
   const handleDelete = (id: any) => () => {
-    console.log('Eliminado vieja: ' + id)
+    removeProduct(id)
+    //TODO: Hacer peticion
+    //TODO: HAcer esto optimista
   }
+
+  //TODO: Agregar imagen en caso de que no haya productos
   return (
     <View className='flex-1 mx-2'>
       <Text className='text-black text-3xl font-bold my-2'>My Favorites</Text>
@@ -76,7 +50,10 @@ const FavoriteItem = ({ handleDelete, product }: FavoriteItemProps) => {
           className='absolute right-0 -top-3 z-50'
         />
         <View className='w-[100px] h-[100px] mr-2'>
-          <Image source={{ uri: product.imgUrl }} className='w-full h-full' />
+          <Image
+            source={{ uri: product.imgUrl[0] }}
+            className='w-full h-full'
+          />
         </View>
 
         <View className='justify-between flex-1'>
