@@ -13,6 +13,7 @@ interface Data {
   price: number
   description: string
   image: Array<{ file: File; url: string }>
+  categoryId: number
 }
 
 export default function CreateProductView() {
@@ -21,7 +22,8 @@ export default function CreateProductView() {
     name: '',
     price: 0,
     description: '',
-    image: []
+    image: [],
+    categoryId: 0
   })
 
   const token = useAuthStore((state) => state.token)
@@ -39,6 +41,7 @@ export default function CreateProductView() {
     formData.append('name', data.name)
     formData.append('price', data.price.toString())
     formData.append('description', data.description)
+    formData.append('category_id', data.categoryId.toString())
     formData.append('inStock', 'true')
     data.image.forEach((i) => {
       formData.append('image', i.file)
@@ -79,7 +82,7 @@ export default function CreateProductView() {
   }
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name, value } = e.target
       setData((prev) => ({ ...prev, [name]: value }))
     },

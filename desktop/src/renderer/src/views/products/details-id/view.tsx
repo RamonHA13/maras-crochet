@@ -10,7 +10,6 @@ export default function EditProductView() {
   const { id } = useParams()
   const getProductById = useProductStore((state) => state.getProductById)
   const product = useMemo(() => getProductById(id!), [])
-
   const handleCloseModal = () => {
     setModalUrl('')
   }
@@ -19,7 +18,7 @@ export default function EditProductView() {
     setModalUrl(url)
   }
   return (
-    <ViewLayout title={`Editar el producto ${product.name}`}>
+    <ViewLayout title={product.name}>
       <div className="flex justify-end px-2">
         <Link
           href={`${Routes.Products}/edit/${id}`}
@@ -28,7 +27,7 @@ export default function EditProductView() {
           Editar producto
         </Link>
       </div>
-      <div className="h-3/4 px-2 flex flex-col gap-2">
+      <div className="h-3/4 px-2 flex flex-col">
         <div className="flex flex-col">
           <h2>Nombre</h2>
           <span className="block w-full bg-slate-300">{product.name}</span>
@@ -36,6 +35,10 @@ export default function EditProductView() {
         <div className="flex flex-col">
           <h2>Precio</h2>
           <span className="block w-full bg-slate-300">${product.price}</span>
+        </div>
+        <div className="flex flex-col">
+          <h2>Categoria</h2>
+          <span className="block w-full bg-slate-300">{product.category.name}</span>
         </div>
         <div>
           <h2>Descripción</h2>

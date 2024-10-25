@@ -1,10 +1,13 @@
 import InputImage from '@renderer/common/components/InputImage'
 import MultipleImages from '@renderer/common/components/MultipleImages'
+import useCategoryStore from '@renderer/views/categories/store'
 import { useRef } from 'react'
 
 interface Props<T> {
   onChangeImage: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => void
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   onRemoveImage: (url: string) => void
   values: T
@@ -19,6 +22,8 @@ export default function ProductForm<T extends Record<string, any>>({
   values,
   type = 'create'
 }: Props<T>) {
+  const categories = useCategoryStore((state) => state.categories)
+
   const inputRef = useRef<HTMLInputElement>(null)
   const handleAddMore = () => {
     inputRef.current?.click()
@@ -47,6 +52,24 @@ export default function ProductForm<T extends Record<string, any>>({
               className="px-2"
               value={values.price} // Precarga el precio si existe un producto
             />
+          </div>
+          <div className="flex flex-col w-1/2">
+            <label htmlFor="price">Categoria</label>
+            <select name="categoryId" onChange={onChange}>
+              <option value="" selected={!!values.category_id}>
+                Selecciona categoria
+              </option>
+              {categories &&
+                categories.map((x) => (
+                  <option
+                    value={x.id}
+                    selected={values.categoryId === x.id}
+                    key={`${x.name}-${x.id}`}
+                  >
+                    {x.name}
+                  </option>
+                ))}
+            </select>
           </div>
         </div>
         <div className="flex flex-col w-full px-2">

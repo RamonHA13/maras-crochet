@@ -15,6 +15,7 @@ interface Data {
   description: string
   image: string[]
   deletedImages: string[]
+  categoryId: number
   newImages: Array<{ file: File; url: string }>
 }
 
@@ -31,6 +32,7 @@ export default function EditProductView() {
     price: product.price,
     description: product.description,
     image: product.imgUrls,
+    categoryId: product.category.id,
     deletedImages: [],
     newImages: []
   })
@@ -45,7 +47,10 @@ export default function EditProductView() {
         data[key] !== product[key] &&
         !key.toLocaleLowerCase().includes('image')
       ) {
-        formData.append(key, typeof value !== 'string' ? String(value) : value)
+        formData.append(
+          key === 'categoryId' ? 'category_id' : key,
+          typeof value !== 'string' ? String(value) : value
+        )
       }
     })
 
@@ -127,14 +132,16 @@ export default function EditProductView() {
   }
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name, value } = e.target
       setData((prev) => ({ ...prev, [name]: value }))
     },
     []
   )
   return (
-    <ViewLayout title={`Edit the product ${product.name}`}>
+    <ViewLayout
+      title={`Edit the product ${product.name && product.name?.length > 9 ? `${product.name?.slice(0, -9)}...` : product.name}`}
+    >
       <Toast />
       <ProductForm
         type="edit"

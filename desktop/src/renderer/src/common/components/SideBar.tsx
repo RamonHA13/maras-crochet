@@ -8,6 +8,8 @@ import sellsLogo from './../../assets/ventas-logo.svg'
 import employeesLogo from './../../assets/empleados-logo.svg'
 import reportsLogo from './../../assets/reportes-logo.svg'
 import homeLogo from './../../assets/home-logo.svg'
+import categoryLogo from './../../assets/categorias-logo.svg'
+
 import SignOutButton from './SignOutButton'
 
 interface Props {
@@ -21,7 +23,8 @@ export default function SideBar({ location, userEmail }: Props) {
     sells: 'Ventas',
     employees: 'Empleados',
     reports: 'Reportes',
-    home: 'Home'
+    home: 'Home',
+    categories: 'Categorias'
   }
 
   const moduleLogoDict = {
@@ -29,7 +32,8 @@ export default function SideBar({ location, userEmail }: Props) {
     sells: sellsLogo,
     employees: employeesLogo,
     reports: reportsLogo,
-    home: homeLogo
+    home: homeLogo,
+    categories: categoryLogo
   }
 
   const noShow = [
@@ -39,7 +43,10 @@ export default function SideBar({ location, userEmail }: Props) {
     'productscreate',
     'employeesedit',
     'employeescreate',
-    'employeesdetails'
+    'employeesdetails',
+    'categoriesedit',
+    'categoriescreate',
+    'categoriesdetails'
   ]
 
   return (

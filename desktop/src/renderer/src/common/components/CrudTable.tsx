@@ -46,7 +46,7 @@ export default function CrudTable<T extends Record<string, any>>({
               <th key={col.header}>{col.header}</th>
             ))}
             <th></th>
-            <th></th>
+            <th>Actions</th>
             <th></th>
           </tr>
         </thead>

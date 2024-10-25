@@ -3,7 +3,7 @@ import { ChangeEvent, forwardRef } from 'react'
 interface Props {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   onClick: () => void
-  className: string
+  className?: string
 }
 
 //TODO: Hacer esto draggable (?
