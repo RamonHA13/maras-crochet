@@ -1,8 +1,8 @@
 interface Props {
-  width: number
-  height: number
+  width?: number
+  height?: number
 }
-export default function FacebookIcon({ height, width }: Props) {
+export default function FacebookIcon({ height = 25, width = 25 }: Props) {
   return (
     <svg
       viewBox='0 0 16 16'
@@ -11,11 +11,11 @@ export default function FacebookIcon({ height, width }: Props) {
       xmlns='http://www.w3.org/2000/svg'
       fill='none'
     >
-      <g id='SVGRepo_bgCarrier' stroke-width='0'></g>
+      <g id='SVGRepo_bgCarrier' strokeWidth='0'></g>
       <g
         id='SVGRepo_tracerCarrier'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       ></g>
       <g id='SVGRepo_iconCarrier'>
         <path
